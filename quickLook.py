@@ -60,12 +60,34 @@ def main():
     log.info('Jobs will be submitted with %f cores.', args.ncores)
     log.info('Emailing %s output from the cluster.', args.email)
 
-def read_config():
+    config_dict = read_config(args.config)
+
+    # Log the information from the configuration file
+    log.info('Using the fermipy template: %s',
+             config_dict['fermipy_yaml_template'])
+    log.info('Using the submission script template: %s',
+             config_dict['submit_template'])
+
+
+def read_config(config):
     """
     Extract the various filepaths specified command-line configuration file.
 
     Parameters:
         config: An input command-line configuration file.
+    """
+
+    with open(config) as file:
+        config_dict = yaml.full_load(file)
+
+    return config_dict
+
+
+def fill_yaml(target, outdir):
+    """
+    Take the yaml input file, and fill in appropriate blanks.
+
+    
     """
 
 
