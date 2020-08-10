@@ -68,6 +68,13 @@ def main():
     log.info('Using the submission script template: %s',
              config_dict['submit_template'])
 
+    # Create a copy of the fermipy yaml template, filling in appropriate
+    # blanks so that the file will work when passed to fermipy.
+    fill_yaml(args.target, args.outdir, config_dict['fermipy_yaml_template'])
+
+    # Create the script that will be submitted to the cluster.
+
+
 
 def read_config(config):
     """
@@ -83,20 +90,101 @@ def read_config(config):
     return config_dict
 
 
-def fill_yaml(target, outdir):
+def fill_yaml(target, outdir, template):
     """
     Take the yaml input file, and fill in appropriate blanks.
 
-    
+    Parameters:
+        target: The 4FGL target name.
+        outdir: The output directory.
+        template: The template fermipy .yaml file.
     """
+
+    # Create the full-path name of the yaml file we will generate
+    yaml_working = outdir + '/configuration.yaml'
+
+    # Begin construction of the yaml file.
+    # Open the reading and writing files
+    yt = open(template, 'r')
+    yw = open(yaml_working, 'w')
+
+    # Loop through all the lines in the yaml template file
+    for line in yt:
+
+        # Look for where to insert the target item
+        if line.strip() == 'insert_target':
+            yw.write('  target  : \'%s\'\n' % (target))
+
+        # Look for where to insert the ourdir item
+        elif line.strip() == 'insert_outdir':
+            yw.write('  outdir   : \'%s\'\n' % (outdir))
+
+        # If we aren't inserting the target or ourdir, print the template line
+        else:
+            yw.write(line)
+
+    # Close the reading and writing yaml files
+    yt.close()
+    yw.close()
+
+def fill_submit(outdir, template):
+    """
+    Take the submission script template file, and fill in appropriate blanks.
+
+    Parameters:
+
+    """
+
+    # Create the full-path name of the .sh file we will generate
+    submit_working = outdir + '/submission.sh'
+
+    # Begin construction of the submission script
+    # Open the reading and writing files
+    st = open(template, 'r')
+    sw = open(submit_working, 'w')
+
+    for line in st:
+
+        # Look for where to insert the cluster_output
+        if line.strip() == 'cluster_outputs':
+            sw.write('#$ -o %s/cluster_out_$JOB_ID.txt\n' % (outdir))
+
+        # Look for where to insert the job name
+        elif line.strip() == 'job_name':
+            spaceless_name = target[0:4] + target[5:]
+            print(spaceless_name)
+            sw.write('#$ -N %s\n' % (spaceless_name[1:]))
+
+        # Look for wohere to insert the email address
+        elif line.strip() == 'email_address':
+            sw.write('#$ -M %s\n' % (email))
+
+        # Otherwise, print the template line
+        else:
+            sw.write(line)
+
+    # Lines to run python scripts
+    sw.write('\n')
+
+    sw.write('python %s \'%s\'\n' % (fermipy_file, yaml_working))
+
+    sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
+             % (gtdiffrsp_file, ncores, evfile, scfile, srcmdl,
+                'CALDB', diffrsp_file))
+
+    sw.write('python %s \'%s\' \'%s\' \'%s\'\n'
+             % (gtsrcprob_file, yaml_working, diffrsp_file, srcmdl))
+
+    # Close the reading and writing .sh files
+    st.close()
+    sw.close()
 
 
 # Set the location of the template files
 yaml_template = '/home/brent/python_scripts/quicker_look/script_templates/quicker_template_4FGL.yaml'
 submit_template = '/home/brent/python_scripts/quicker_look/script_templates/quicker_control_template.sh'
 
-# Create the full-path name of the yaml file we will generate
-yaml_working = outdir + '/configuration.yaml'
+
 submit_working = outdir + '/submission.sh'
 
 # For testing purposes
@@ -116,29 +204,7 @@ evfile = outdir + '/ft1_00.fits'
 srcmdl = outdir + '/quick_look_00_00.xml'
 diffrsp_file = outdir + '/diffrsp.fits'
 
-# Begin construction of the yaml file.
-# Open the reading and writing files
-yt = open(yaml_template, 'r')
-yw = open(yaml_working, 'w')
 
-# Loop through all the lines in the yaml template file
-for line in yt:
-
-    # Look for where to insert the target item
-    if line.strip() == 'insert_target':
-        yw.write('  target  : \'%s\'\n' % (target))
-
-    # Look for where to insert the ourdir item
-    elif line.strip() == 'insert_outdir':
-        yw.write('  outdir   : \'%s\'\n' % (outdir))
-
-    # If we aren't inserting the target or ourdir, print the template line
-    else:
-        yw.write(line)
-
-# Close the reading and writing yaml files
-yt.close()
-yw.close()
 
 # Once the yaml file has been written, we actually have to open it again to
 # get a few more details out of it. These could probably be hardcoded, but
@@ -154,46 +220,7 @@ with open(yaml_working) as stream:
 # Extract the important things from the config file
 scfile = configFile['data']['scfile']
 
-# Begin construction of the submission script
-# Open the reading and writing files
-st = open(submit_template, 'r')
-sw = open(submit_working, 'w')
 
-for line in st:
-
-    # Look for where to insert the cluster_output
-    if line.strip() == 'cluster_outputs':
-        sw.write('#$ -o %s/cluster_out_$JOB_ID.txt\n' % (outdir))
-
-    # Look for where to insert the job name
-    elif line.strip() == 'job_name':
-        spaceless_name = target[0:4] + target[5:]
-        print(spaceless_name)
-        sw.write('#$ -N %s\n' % (spaceless_name[1:]))
-
-    # Look for wohere to insert the email address
-    elif line.strip() == 'email_address':
-        sw.write('#$ -M %s\n' % (email))
-
-    # Otherwise, print the template line
-    else:
-        sw.write(line)
-
-# Lines to run python scripts
-sw.write('\n')
-
-sw.write('python %s \'%s\'\n' % (fermipy_file, yaml_working))
-
-sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
-         % (gtdiffrsp_file, ncores, evfile, scfile, srcmdl,
-            'CALDB', diffrsp_file))
-
-sw.write('python %s \'%s\' \'%s\' \'%s\'\n'
-         % (gtsrcprob_file, yaml_working, diffrsp_file, srcmdl))
-
-# Close the reading and writing .sh files
-st.close()
-sw.close()
 
 # Finally, we submit the job to the cluster
 #sub_command = 'qsub -l hostname=%s %s ' % (com_node, submit_working)
