@@ -11,17 +11,47 @@ import sys
 import yaml
 
 # Import tools that allow you to run commandline from python
-from subprocess import call
+import argparse
 
-# Read in the commandline commands
-target   = sys.argv[1]
-outdir   = sys.argv[2]
-ncores   = sys.argv[3]
-email    = sys.argv[4]
-#com_node = sys.argv[5]
+# Import tools for creating a log
+import logging
 
-# Remove trailing slashes from outdir
-outdir = outdir.rstrip('/')
+# Create the log object
+log = logging.getLogger(__name__)
+
+
+# The function that runs when the script is called
+def main():
+    """
+    Automatically calculate spectral information about an input source.
+
+    Parameters:
+        param_1: The first parameter
+        param_2: The second parameter
+
+    Keyword Arguments:
+        opt_1: The first optional argument
+        opt_2: The second optional argument
+    """
+
+    # Add the docstring to the argument parser
+    # This doesn't currently work the way I want it to
+    # Try print(__doc__) to see.
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    # Add arguments
+    parser.add_argument('target', help='The 4FGL target name.')
+    parser.add_argument('outdir', help='The output directory.')
+    parser.add_argument('ncores', help='The number of cores to be used in '
+                                       'diffuse response generation.')
+    parser.add_argument('email', help='Your email address.')
+
+    # #xtract the arguments from the parser
+    args = parser.parse_args()
+
+    # Remove trailing slashes from the outdir
+    args.outdir = args.outdir.strip('/')
+
 
 # Re-print the inputs as a check
 print('The target is: %s' % (target))
