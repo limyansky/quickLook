@@ -42,6 +42,8 @@ def main():
     # Add arguments
     parser.add_argument('target', help='The 4FGL target name.')
     parser.add_argument('outdir', help='The output directory.')
+    parser.add_argument('config', help='A .yaml file containing paths to the '
+                                       'relivant templates.')
     parser.add_argument('ncores', help='The number of cores to be used in '
                                        'diffuse response generation.')
     parser.add_argument('email', help='Your email address.')
@@ -52,12 +54,20 @@ def main():
     # Remove trailing slashes from the outdir
     args.outdir = args.outdir.strip('/')
 
+    # Log the input information
+    log.info('Looking at source %s.', args.target)
+    log.info('Storing output in %s.', args.outdir)
+    log.info('Jobs will be submitted with %f cores.', args.ncores)
+    log.info('Emailing %s output from the cluster.', args.email)
 
-# Re-print the inputs as a check
-print('The target is: %s' % (target))
-print('The output directory is: %s' % (outdir))
-print('The number of cores requested is: %s' % (ncores))
-print('Your email is: %s' % (email))
+def read_config():
+    """
+    Extract the various filepaths specified command-line configuration file.
+
+    Parameters:
+        config: An input command-line configuration file.
+    """
+
 
 # Set the location of the template files
 yaml_template = '/home/brent/python_scripts/quicker_look/script_templates/quicker_template_4FGL.yaml'
