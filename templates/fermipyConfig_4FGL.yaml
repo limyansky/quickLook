@@ -1,0 +1,35 @@
+data:
+  evfile : /home/brent/weekly_data.txt
+  scfile : /home/brent/lat_spacecraft_merged.fits
+
+binning:
+  roiwidth   : 5 # psf containment angle at 60 MeV ~ 10deg
+  binsz      : 0.3
+  enumbins   : 32
+
+selection :
+  tmin    : 239557417 # 2008-08-04 15:43:36
+  tmax    : 583810513 # 2019Jul03 at 01:35:08.000 UTC
+  emin    : 50
+  emax    : 870000
+  zmax    : 90
+  evclass : 128
+  evtype  : 3
+  filter  : '(DATA_QUAL>0)&&(LAT_CONFIG==1)'
+  insert_target
+
+gtlike:
+  edisp : True
+  irfs : 'P8R3_SOURCE_V2'
+  edisp_disable : ['isodiff']
+
+model:
+  src_roiwidth : 30
+  galdiff  : '/home/brent/4FGL_prelim/gll_iem_v07.fits'
+  catalogs : ['/home/brent/4FGL_prelim/gll_psc_v18.fit']
+  extdir   : '/home/brent/4FGL_prelim/Templates/'
+  isodiff  : '/home/brent/4FGL_prelim/iso_P8R3_SOURCE_V2_v1.txt'   
+
+fileio:
+   insert_outdir
+

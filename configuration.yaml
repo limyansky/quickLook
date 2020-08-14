@@ -1,0 +1,5 @@
+fermipy_yaml_template : /home/brent/github/quickLook/templates/fermipyConfig_4FGL.yaml
+submit_template       : /home/brent/github/quickLook/templates/submission_template.py
+fermipy_callable      : /home/brent/github/quickLook/fermipy_callable.py
+gtdiffrsp_mp          : NONE
+gtsrcprob_callable    : 
