@@ -4,9 +4,6 @@
 # Writes an appropriate .yaml file
 # Submits the submission script
 
-# Needed to read in commandline arguments
-import sys
-
 # Import tools to read the .yaml config file
 import yaml
 
@@ -15,6 +12,9 @@ import argparse
 
 # Import tools for creating a log
 import logging
+
+# Tool to submit things to the commandline
+from subprocess import call
 
 # Create the log object
 log = logging.getLogger(__name__)
@@ -73,6 +73,10 @@ def main():
     fill_yaml(args.target, args.outdir, config_dict['fermipy_yaml_template'])
 
     # Create the script that will be submitted to the cluster.
+    fill_submit(args.target, args.outdir, args.config, args.ncores, args.email)
+
+    # Submit the job to the cluster
+    submit_script(args.outdir)
 
 
 def read_config(config):
@@ -168,8 +172,8 @@ def fill_submit(target, outdir, config, ncores, email):
     # fermipy, and I hardcode their paths here.
     evfile = outdir + '/ft1_00.fits'
     srcmdl = outdir + '/quick_look_00_00.xml'
+    srcmdl_long = outdir + 'quick_look_00_00_long.xml'
     diffrsp_file = outdir + '/diffrsp.fits'
-
 
     # Begin construction of the submission script
     # Open the reading and writing files
@@ -204,20 +208,29 @@ def fill_submit(target, outdir, config, ncores, email):
     sw.write('python %s \'%s\'\n' % (
              config['fermipy_callable'], outdir + '/configuration.yaml'))
 
+    # Some of these scripts can't use fermipy's default $(FERMIPY_DATA_DIR)
+    # shortcut. These commands replace this with the absolute path
+    sw.write('cp %s %s\n', srcmdl, srcmdl_long)
+
+    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s",
+             config['FERMIPY_DATA_DIR'], srcmdl_long)
+
     sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
              % (config['gtdiffrsp_mp'], ncores, evfile, scfile, srcmdl,
                 'CALDB', diffrsp_file))
 
     sw.write('python %s \'%s\' \'%s\' \'%s\'\n'
-             % (config['gtsrcprob_callable'], yaml_working, diffrsp_file, srcmdl))
+             % (config['gtsrcprob_callable'], yaml_working, diffrsp_file,
+                srcmdl))
 
     # Close the reading and writing .sh files
     st.close()
     sw.close()
 
 
-# Finally, we submit the job to the cluster
-#sub_command = 'qsub -l hostname=%s %s ' % (com_node, submit_working)
-sub_command = 'qsub %s' % (submit_working)
-print sub_command
-call(sub_command, shell=True)
+def submit_script(outdir):
+    # Finally, we submit the job to the cluster
+    submit_working = outdir + '/submission.sh'
+    sub_command = 'qsub %s' % (submit_working)
+    log.info(sub_command)
+    call(sub_command, shell=True)
