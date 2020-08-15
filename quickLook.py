@@ -234,3 +234,8 @@ def submit_script(outdir):
     sub_command = 'qsub %s' % (submit_working)
     log.info(sub_command)
     call(sub_command, shell=True)
+
+
+# Make the script run in the commandline
+if __name__ == "__main__":
+    main()
