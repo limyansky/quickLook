@@ -213,7 +213,7 @@ def fill_submit(target, outdir, config, ncores, email):
     # shortcut. These commands replace this with the absolute path
     sw.write('cp %s %s\n' % (srcmdl, srcmdl_long))
 
-    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s" %
+    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s\n" %
              (config['FERMIPY_DATA_DIR'], srcmdl_long))
 
     sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
