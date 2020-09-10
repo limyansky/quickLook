@@ -16,7 +16,7 @@ selection :
   evclass : 128
   evtype  : 3
   filter  : '(DATA_QUAL>0)&&(LAT_CONFIG==1)'
-  insert_target:
+  insert_target
 
 gtlike:
   edisp : True
@@ -31,5 +31,5 @@ model:
   isodiff  : '/home/brent/4FGL_prelim/iso_P8R3_SOURCE_V2_v1.txt'   
 
 fileio:
-   insert_outdir:
+   insert_outdir
 

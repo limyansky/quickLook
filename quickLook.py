@@ -61,6 +61,7 @@ def main():
     log.info('Emailing %s output from the cluster.', args.email)
 
     config_dict = read_config(args.config)
+    print(config_dict)
 
     # Log the information from the configuration file
     log.info('Using the fermipy template: %s',
@@ -115,11 +116,11 @@ def fill_yaml(target, outdir, template):
     for line in yt:
 
         # Look for where to insert the target item
-        if line.strip() == 'insert_target:':
+        if line.strip() == 'insert_target':
             yw.write('  target  : \'%s\'\n' % (target))
 
         # Look for where to insert the ourdir item
-        elif line.strip() == 'insert_outdir:':
+        elif line.strip() == 'insert_outdir':
             yw.write('  outdir   : \'%s\'\n' % (outdir))
 
         # If we aren't inserting the target or ourdir, print the template line
