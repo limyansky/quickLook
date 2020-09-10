@@ -88,7 +88,7 @@ def read_config(config):
     """
 
     with open(config) as file:
-        config_dict = yaml.full_load(file)
+        config_dict = yaml.load(file)
 
     return config_dict
 
@@ -115,11 +115,11 @@ def fill_yaml(target, outdir, template):
     for line in yt:
 
         # Look for where to insert the target item
-        if line.strip() == 'insert_target':
+        if line.strip() == 'insert_target:':
             yw.write('  target  : \'%s\'\n' % (target))
 
         # Look for where to insert the ourdir item
-        elif line.strip() == 'insert_outdir':
+        elif line.strip() == 'insert_outdir:':
             yw.write('  outdir   : \'%s\'\n' % (outdir))
 
         # If we aren't inserting the target or ourdir, print the template line
