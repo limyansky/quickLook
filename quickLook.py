@@ -41,7 +41,7 @@ def main():
 
     # Add arguments
     parser.add_argument('target', help='The 4FGL target name.')
-    parser.add_argument('outdir', help='The output directory.')
+    parser.add_argument('outdir', help='The output directory.', type=str)
     parser.add_argument('config', help='A .yaml file containing paths to the '
                                        'relivant templates.')
     parser.add_argument('ncores', help='The number of cores to be used in '
@@ -52,7 +52,7 @@ def main():
     args = parser.parse_args()
 
     # Remove trailing slashes from the outdir
-    args.outdir = args.outdir.strip('/')
+    args.outdir = args.outdir.rstrip('/')
 
     # Log the input information
     log.info('Looking at source %s.', args.target)
@@ -74,7 +74,7 @@ def main():
     fill_yaml(args.target, args.outdir, config_dict['fermipy_yaml_template'])
 
     # Create the script that will be submitted to the cluster.
-    fill_submit(args.target, args.outdir, args.config, args.ncores, args.email)
+    fill_submit(args.target, args.outdir, config_dict, args.ncores, args.email)
 
     # Submit the job to the cluster
     submit_script(args.outdir)
@@ -110,7 +110,7 @@ def fill_yaml(target, outdir, template):
     # Begin construction of the yaml file.
     # Open the reading and writing files
     yt = open(template, 'r')
-    yw = open(yaml_working, 'w')
+    yw = open(yaml_working, 'w+')
 
     # Loop through all the lines in the yaml template file
     for line in yt:
@@ -211,10 +211,10 @@ def fill_submit(target, outdir, config, ncores, email):
 
     # Some of these scripts can't use fermipy's default $(FERMIPY_DATA_DIR)
     # shortcut. These commands replace this with the absolute path
-    sw.write('cp %s %s\n', srcmdl, srcmdl_long)
+    sw.write('cp %s %s\n' % (srcmdl, srcmdl_long))
 
-    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s",
-             config['FERMIPY_DATA_DIR'], srcmdl_long)
+    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s" %
+             (config['FERMIPY_DATA_DIR'], srcmdl_long))
 
     sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
              % (config['gtdiffrsp_mp'], ncores, evfile, scfile, srcmdl,
