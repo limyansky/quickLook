@@ -63,7 +63,7 @@ def diffrsp(times):
     filter['tmin'] = times[0]
     filter['tmax'] = times[1]
     filter['emin'] = 0
-    filter['emax'] = 400000
+    filter['emax'] = 5000000
     filter['zmax'] = 180
     filter['convtype'] = -1
     filter['chatter'] = 3
@@ -127,7 +127,7 @@ def eventsum(filenames, Outfile, SaveTemp):
         filter['tmin'] = "INDEF"
         filter['tmax'] = "INDEF"
         filter['emin'] = 0
-        filter['emax'] = 400000
+        filter['emax'] = 5000000
         filter['zmax'] = 180
         filter['convtype'] = -1
         filter['chatter'] = 0
