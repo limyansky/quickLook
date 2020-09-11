@@ -26,8 +26,8 @@ gtlike:
 model:
   src_roiwidth : 30
   galdiff  : '/home/brent/4FGL_prelim/gll_iem_v07.fits'
-  catalogs : ['/home/brent/4FGL_prelim/gll_psc_v22.fit']
-  extdir   : '/home/brent/4FGL_prelim/Templates/'
+  catalogs : ['/home/brent/4FGL_prelim/gll_psc_v21.xml']
+  # extdir   : '/home/brent/4FGL_prelim/Templates/'
   isodiff  : '/home/brent/4FGL_prelim/iso_P8R3_SOURCE_V2_v1.txt'   
 
 fileio:
