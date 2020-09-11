@@ -173,7 +173,7 @@ def fill_submit(target, outdir, config, ncores, email):
     # fermipy, and I hardcode their paths here.
     evfile = outdir + '/ft1_00.fits'
     srcmdl = outdir + '/quick_look_00_00.xml'
-    srcmdl_long = outdir + 'quick_look_00_00_long.xml'
+    srcmdl_long = outdir + '/quick_look_00_00_long.xml'
     diffrsp_file = outdir + '/diffrsp.fits'
 
     # Begin construction of the submission script

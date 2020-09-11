@@ -100,5 +100,5 @@ if enable_Fit:
 
     gta.fit()
 
-gta.write_roi('quick_look_00')
+gta.write_roi(outdir + '/quick_look_00')
 auto_plotter(gta, target, imagefile, clean=True)

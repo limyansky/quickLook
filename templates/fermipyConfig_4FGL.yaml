@@ -1,6 +1,6 @@
 data:
   evfile : /home/brent/weekly_data.txt
-  scfile : /home/brent/lat_spacecraft_merged.fits
+  scfile : /home/brent/spacecraft_manual_8.fits
 
 binning:
   roiwidth   : 5 # psf containment angle at 60 MeV ~ 10deg
