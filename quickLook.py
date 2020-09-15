@@ -175,6 +175,8 @@ def fill_submit(target, outdir, config, ncores, email):
     srcmdl = outdir + '/quick_look_00_00.xml'
     srcmdl_long = outdir + '/quick_look_00_00_long.xml'
     diffrsp_file = outdir + '/diffrsp.fits'
+    weights_file = outdir + '/weights.fits'
+    srclist = outdir + '/srclist.txt'
 
     # Begin construction of the submission script
     # Open the reading and writing files
@@ -213,16 +215,19 @@ def fill_submit(target, outdir, config, ncores, email):
     # shortcut. These commands replace this with the absolute path
     sw.write('cp %s %s\n' % (srcmdl, srcmdl_long))
 
-    sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s\n" %
-             (config['FERMIPY_DATA_DIR'], srcmdl_long))
+    # sw.write("sed 's/$(FERMIPY_DATA_DIR)/%s/g' %s\n" %
+    #          (config['FERMIPY_DATA_DIR'], srcmdl_long))
 
     sw.write('python %s %s \'%s\' \'%s\' \'%s\' \'%s\' \'%s\'\n'
              % (config['gtdiffrsp_mp'], ncores, evfile, scfile, srcmdl,
                 'CALDB', diffrsp_file))
 
-    sw.write('python %s \'%s\' \'%s\' \'%s\'\n'
-             % (config['gtsrcprob_callable'], yaml_working, diffrsp_file,
-                srcmdl))
+    # Write the name of the target to a text file
+    sw.write('echo "%s" > %s\n' % (target, srclist))
+
+    # run gtsrcprob on the file.
+    sw.write('gtsrcprob evfile=%s scfile=%s outfile=%s srcmdl=%s irfs=CALDB srclist=%s'
+             % (diffrsp_file, scfile, weights_file, srcmdl, srclist))
 
     # Close the reading and writing .sh files
     st.close()
