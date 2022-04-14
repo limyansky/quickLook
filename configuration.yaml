@@ -3,4 +3,4 @@ submit_template       : /home/brent/github/quickLook/templates/submission_templa
 fermipy_callable      : /home/brent/github/quickLook/fermipy_callable.py
 gtdiffrsp_mp          : /home/brent/github/quickLook/gtdiffrsp_mp_brent.py
 gtsrcprob_callable    : /home/brent/github/quickLook/gtsrcprob_callable.py
-FERMIPY_DATA_DIR      : \\/home\\/brent\\/github\\/fermipy\\/fermipy\\/data
+FERMIPY_DATA_DIR      : \\/home\\/brent\\/miniconda3\\/pkgs\\/fermipy-1.0.1-py37h888b3d9_0\\/lib\\/python3.7\\/site-packages\\/fermipy\\/data\\/

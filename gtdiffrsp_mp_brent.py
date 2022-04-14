@@ -49,7 +49,7 @@ def diffrsp(times):
 
     hdu_1.close()
 
-    print "Starting calculation on interval {} to {}".format(times[0],times[1])
+    print("Starting calculation on interval {} to {}".format(times[0],times[1]))
 
     osfilehandle, outfilename = tempfile.mkstemp(suffix=".fits")
     filter['rad'] = rad
@@ -77,8 +77,8 @@ def diffrsp(times):
     diffResps.run(print_command=False)
     command = 'Nothing yet'
     command = diffResps.command()
-    print command
-    print "Completed calculation of interval {} to {}".format(times[0],times[1])
+    print(command)
+    print("Completed calculation of interval {} to {}".format(times[0],times[1]))
     return outfilename
 
 def eventsum(filenames, Outfile, SaveTemp):
@@ -94,7 +94,8 @@ def eventsum(filenames, Outfile, SaveTemp):
     else:
         fileListfile = tempfile.NamedTemporaryFile()
         for filename in filenames:
-            fileListfile.file.write(filename + "\n")
+            filename_bit = str.encode(filename + "\n")
+            fileListfile.file.write(filename_bit)
 
         hdu_1 = fits.open(filenames[0], ignore_missing_end=True)
         for ii in hdu_1[1].header:
@@ -135,10 +136,10 @@ def eventsum(filenames, Outfile, SaveTemp):
         filter.run(print_command=True)
 
     if SaveTemp:
-        print "Did not delete the following temporary files:"
-        print filenames
+        print("Did not delete the following temporary files:")
+        print(filenames)
     else:
-        print "Deleting temporary files..."
+        print("Deleting temporary files...")
         for filename in filenames:
             os.remove(filename)
 
@@ -149,7 +150,7 @@ def gtdiffrsp_mp(bins, SCFile, EVFile, OutFile, SaveTemp, SrcModel,IRF):
     and splits the time into chunks.  It then submits jobs based upon
     those start and stop times.'''
 
-    print "Opening event file to determine break points..."
+    print("Opening event file to determine break points...")
     hdulist = pyfits.open(EVFile)
     tstart = hdulist[0].header['TSTART']
     tstop = hdulist[0].header['TSTOP']
@@ -169,9 +170,9 @@ def gtdiffrsp_mp(bins, SCFile, EVFile, OutFile, SaveTemp, SrcModel,IRF):
     pool = Pool(processes=bins)      
     times = np.array([starts,stops,scfiles,evfiles,srcmdls,irfs])
 
-    print "Spawning {} jobs...".format(bins)
+    print ("Spawning {} jobs...".format(bins))
     tempfilenames = pool.map(diffrsp,times.transpose())
-    print "Combining temporary files..."
+    print ("Combining temporary files...")
     eventsum(tempfilenames, OutFile, SaveTemp)
 
 def cli():

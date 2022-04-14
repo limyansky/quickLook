@@ -1,6 +1,7 @@
 data:
-  evfile : /home/brent/weekly_data.txt
-  scfile : /home/brent/spacecraft_manual_8.fits
+  evfile : /home/brent/weekly_master.txt
+  scfile : /mnt/raid1/Work/brent/fermi/suppliment_data/weekly/spacecraft_master.fits
+
 
 binning:
   roiwidth   : 5 # psf containment angle at 60 MeV ~ 10deg
@@ -9,9 +10,9 @@ binning:
 
 selection :
   tmin    : 239557417 # 2008-08-04 15:43:36
-  tmax    : 618969605 # 2020Aug13 at 00:00:00.000 UTC
+  tmax    : 653252000 # 2021Sep13 at 18:53:15.000
   emin    : 50
-  emax    : 870000
+  emax    : 1000000
   zmax    : 90
   evclass : 128
   evtype  : 3
@@ -20,15 +21,15 @@ selection :
 
 gtlike:
   edisp : True
-  irfs : 'P8R3_SOURCE_V2'
+  irfs : 'P8R3_SOURCE_V3'
   edisp_disable : ['isodiff']
 
 model:
   src_roiwidth : 30
   galdiff  : '/home/brent/4FGL_prelim/gll_iem_v07.fits'
-  catalogs : ['/home/brent/4FGL_prelim/gll_psc_v21.xml']
+  catalogs : ['4FGL']
   # extdir   : '/home/brent/4FGL_prelim/Templates/'
-  isodiff  : '/home/brent/4FGL_prelim/iso_P8R3_SOURCE_V2_v1.txt'   
+  isodiff  : '/home/brent/4FGL_prelim/iso_P8R3_SOURCE_V3_v1.txt'   
 
 fileio:
    insert_outdir
