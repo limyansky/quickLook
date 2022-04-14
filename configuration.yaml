@@ -1,4 +1,4 @@
-fermipy_yaml_template : /home/brent/github/quickLook/templates/fermipyConfig_4FGL_DR3.yaml
+fermipy_yaml_template : /home/brent/github/quickLook/templates/fermipyConfig_4FGL_DR2.yaml
 submit_template       : /home/brent/github/quickLook/templates/submission_template.py
 fermipy_callable      : /home/brent/github/quickLook/fermipy_callable.py
 gtdiffrsp_mp          : /home/brent/github/quickLook/gtdiffrsp_mp_brent.py
