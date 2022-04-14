@@ -77,7 +77,7 @@ def main():
     fill_submit(args.target, args.outdir, config_dict, args.ncores, args.email)
 
     # Submit the job to the cluster
-    submit_script(args.outdir)
+    # submit_script(args.outdir)
 
 
 def read_config(config):
