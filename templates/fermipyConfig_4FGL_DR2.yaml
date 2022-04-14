@@ -1,0 +1,36 @@
+data:
+  evfile : /home/brent/weekly_master.txt
+  scfile : /mnt/raid1/Work/brent/fermi/suppliment_data/weekly/spacecraft_master.fits
+
+
+binning:
+  roiwidth   : 5 # psf containment angle at 60 MeV ~ 10deg
+  binsz      : 0.3
+  enumbins   : 32
+
+selection :
+  tmin    : 239557417 # 2008-08-04 15:43:36
+  tmax    : 670982405 # 2022Apr07 at 00:00:00.000 UTC
+  emin    : 50
+  emax    : 1000000
+  zmax    : 90
+  evclass : 128
+  evtype  : 3
+  filter  : '(DATA_QUAL>0)&&(LAT_CONFIG==1)'
+  insert_target
+
+gtlike:
+  edisp : True
+  irfs : 'P8R3_SOURCE_V3'
+  edisp_disable : ['isodiff']
+
+model:
+  src_roiwidth : 30
+  galdiff  : '/home/brent/4FGL_DR2/gll_iem_v07.fits'
+  catalogs : ['//home/brent/4FGL_DR2/gll_psc_v27.fit']
+  extdir   : '/home/brent/4FGL_DR2/Extended_8years/Templates/'
+  isodiff  : '/home/brent/4FGL_DR2/iso_P8R3_SOURCE_V3_v1.txt'   
+
+fileio:
+   insert_outdir
+
